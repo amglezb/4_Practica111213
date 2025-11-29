@@ -1,0 +1,438 @@
+\documentclass[doublespacing,12pt,oneside]{article}
+\usepackage[top=2.5cm, left=2.5cm, right=2.5cm, bottom=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-nodecimaldot,es-tabla]{babel}
+\usepackage{caption, subcaption}
+\usepackage{graphicx}
+\usepackage{imakeidx}
+\usepackage{biblatex}
+\usepackage{float}
+\addbibresource{bib/protocolo.bib}
+\addbibresource{biblio.bib}
+\graphicspath{{./figs/}}
+\usepackage{setspace}
+\begin{document}
+\tableofcontents\clearpage
+
+\section{Introducción}
+\subsection{Planteamiento del Problema}
+El desafío en la práctica de la ingeniería de software requiere la integración de tres dominios fundamentales para la construcción de sistemas eficientes, persistentes y bien estructurados: la gestión de la información mediante Archivos, la optimización del rendimiento a través de Hilos de Ejecución, y la aplicación de soluciones de diseño probadas mediante Patrones. El problema fundamental a resolver en la formación práctica es adquirir y aplicar estos conocimientos de manera activa, trascendiendo la teoría. El objetivo es que, a partir del estudio y análisis de los códigos y ejemplos proporcionados por el profesor, el estudiante logre comprender la implementación práctica del flujo de datos en archivos, la concurrencia de tareas en hilos y la estructuración del código con patrones de diseño.
+
+\subsection{Motivación}
+El estudio de Archivos, Hilos y Patrones representa la transición de la programación básica a la ingeniería de software profesional. La motivación principal es dotar al estudiante de una base sólida para el desarrollo de sistemas complejos. Aprender sobre Archivos permite entender la persistencia y la arquitectura de un Repositorio (distinguiendo entre el Almacén Físico y Lógico). El manejo de Hilos y el Event Loop prepara para crear aplicaciones de alto rendimiento capaces de manejar múltiples tareas concurrentes. Finalmente, la comprensión de Patrones (incluyendo el Singleton y otros Patrones de Diseño/Software/Programación) proporciona el lenguaje y las estructuras para crear código mantenible, reusable y que resuelva problemas comunes de manera elegante. Este enfoque práctico garantiza que los conceptos se asimilen para ser aplicados en cualquier contexto de desarrollo.
+
+\subsection{Objetivos}
+El objetivo general de este proyecto de aprendizaje es integrar las habilidades necesarias para manejar la persistencia, concurrencia y diseño estructural del software.
+
+Los objetivos específicos son:
+\begin{itemize}
+    \item Archivos: Comprender y aplicar el concepto de fuente de datos...
+    \item Hilos: Implementar y gestionar la concurrencia de tareas...
+    \item Patrones: Identificar, analizar y aplicar distintos patrones de diseño...
+\end{itemize}
+
+\section{Marco Teórico}
+
+\subsection{Excepciones}
+
+Una excepción es un objeto en el código que durante la ejecución del programa interrumpe el flujo normal de las sentencias, es decir, se produce cuando un acontecimiento circunstancial impide el normal funcionamiento del programa. La "excepción" contiene información sobre el acontecimiento ocurrido y transmite esta información al método desde el que se ha generado la excepción. Dependiendo del error puede cambiar la excepción, pero aun así todas las excepciones son subclases de Throwable, los tipos son los siguientes: \cite{Virginia_Excepciones}
+\begin{itemize}
+    \item Checked exceptions: se deben declarar en la firma del método o capturar explícitamente en un bloque try-catch.
+    \item Unchecked exceptions: este tipo ocurre durante la ejecución del programa y no se requiere que sean declaradas en la firma del método. Se heredan de la clase RunTimeException.
+    \item Errors: son problemas graves están fuera de control del programador y no deben manejarse explícitamente. Estos errores terminan la ejecución del programa. \cite{OpenWebinars}
+\end{itemize}
+
+El funcionamiento de las excepciones es el siguiente:
+
+\begin{enumerate}
+    \item Definimos qué partes del programa crean una excepción y bajo qué condiciones.
+    \item Comprobamos si ciertas partes del programa generan una excepción.
+    \item En caso afirmativo se utilizan las palabras reservadas try, catch y finally. \cite{Blogspot_Excepciones}
+\end{enumerate}
+\subsection{Archivos}
+
+Los archivos tienen como finalidad guardar datos de forma permanente. Una vez que acaba la aplicación los datos almacenados estarán disponibles para que otra aplicación pueda recuperarlos para su consulta o modificación.
+Las formas fundamentales de organizar un archivo son las siguientes:
+Secuenciales: los registros se insertan en el archivo en orden de llegada. Este tipo de archivo permite escribir, añadir al final del archivo y consultar.
+Directa o aleatoria: cuando un registro es directamente accesible mediante la especificación de un índice. \cite{Blogspot_Archivos}
+
+\subsection{Hilos}
+
+En el contexto de la ingeniería de software, un hilo (o \textit{thread}) se define como la unidad más pequeña de procesamiento que puede ser programada por un sistema operativo. La implementación de hilos permite la \textbf{programación concurrente}, la cual es la capacidad de un programa para ejecutar múltiples tareas en periodos de tiempo superpuestos, optimizando así el uso de los recursos del CPU \cite{Oracle_Concurrency}.
+
+El uso de hilos es fundamental para mantener la capacidad de respuesta de las aplicaciones, permitiendo que operaciones pesadas se ejecuten en segundo plano. En lenguajes como Java, la concurrencia se gestiona principalmente a través de la clase \texttt{Thread} y la interfaz \texttt{Runnable}, permitiendo crear entornos multitarea eficientes y sincronizados \cite{Deitel_Java}.
+
+\subsection{Patrones de Diseño}
+
+Los patrones de diseño son soluciones probadas y documentadas para problemas recurrentes en el desarrollo de software \cite{Gamma_DesignPatterns}. No son fragmentos de código listos para copiar, sino plantillas o descripciones de cómo resolver un problema que pueden usarse en muchas situaciones diferentes. Su objetivo principal es facilitar la reutilización de código, mejorar la legibilidad y asegurar que el sistema sea escalable.
+
+Estos patrones se clasifican generalmente en tres categorías: \textbf{creacionales} (manejan mecanismos de creación de objetos), \textbf{estructurales} (tratan la composición de clases y objetos) y \textbf{de comportamiento} (se ocupan de la comunicación entre objetos). La aplicación correcta de estos patrones permite desacoplar los componentes del sistema, haciendo que el software sea más robusto frente a cambios futuros.
+
+
+\section{Desarrollo}
+\subsection{Análisis del Código}
+\subsubsection{Archivos}
+
+Se utiliza la librería \texttt{io} para interactuar con el sistema de archivos (crear, leer, escribir) y para manejar la entrada/salida de datos. El \texttt{main} tiene un ciclo infinito que se ejecuta siempre que el usuario no seleccione salir. Se muestra un menú con 4 opciones; con \texttt{stdin.readLineSync()} se lee la entrada del teclado y siempre se convierte el texto a número con \texttt{int.tryParse}, aunque si no es un número válido, el \texttt{switch} imprime el error.
+
+\begin{itemize}
+    \item \textbf{Opción 1 (\texttt{\_crearYEscribirArchivo()}):} Crea un archivo desde cero, pide el nombre, y se pueden escribir varias líneas de texto ya que está en un ciclo el cual solo se rompe cuando se escribe ``FIN''. Al final se guarda con \texttt{archivo.writeAsStringSync()} y no guarda el texto con saltos de línea comunes, sino que escribe en su lugar ``\textbackslash n''.
+    
+    \item \textbf{Opción 2 (\texttt{\_leerArchivoExistente()}):} Esta función muestra lo que hay dentro de un archivo, pero antes de intentar leer, usa \texttt{archivo.existsSync()} para asegurarse de que el archivo exista y si no le avisa el usuario. Si el archivo está en orden, usa \texttt{archivo.readAsStringSync()} para obtener todo el texto del archivo y lo imprime en pantalla entre separadores visuales.
+    
+    \item \textbf{Opción 3 (\texttt{\_sobrescribirArchivo()}):} Es parecida a la opción 1 pero con algunas verificaciones extra para la sobrescritura. Primero verifica que exista y obliga a escribir ``SI'' para confirmar; esto es muy importante porque sobrescribir borra todo el contenido anterior de archivo. Una vez que se confirma funciona igual que la opción uno, captura la información hasta escribir ``FIN'' y se guardan los cambios.
+\end{itemize}
+
+Cada operación está en \texttt{try} para evitar que el programa se cierre sin saber por qué.
+
+\paragraph{Interpretación}
+Los conceptos que abarca el programa son excepciones y archivos.
+
+\begin{itemize}
+    \item Con los bloques \texttt{try-catch} se intenta ejecutar un bloque de código ``riesgoso'' (\texttt{try}) y, si algo falla, se captura el error (\texttt{catch}) para manejarlo. En el código, se utilizan envolviendo las operaciones de lectura y escritura (\texttt{writeAsStringSync}, \texttt{readAsStringSync}), ya que las operaciones de entrada/salida son impredecibles: el archivo podría estar protegido contra escritura o podría haber sido borrado.
+    
+    \item La manipulación de archivos se basa en la persistencia de datos mediante el sistema de archivos. Con las operaciones sincrónicas el hilo de ejecución (el programa) se ``detiene'' y espera a que el disco termine de leer o escribir antes de pasar a la siguiente línea de código; esto ocurre con los métodos \texttt{readLineSync}, \texttt{writeAsStringSync} y \texttt{readAsStringSync}.
+\end{itemize}
+
+\subsubsection{Hilos}
+
+Se utiliza la librería \texttt{isolate} para la ejecución de código en paralelo y la sintaxis nativa de \texttt{Future} para el manejo de asincronía. Los archivos muestran la diferencia entre bloquear el hilo principal, usar asincronía (Futures) y usar paralelismo real (Isolates).
+
+\begin{itemize}
+    \item En el \textbf{Ejemplo 1}, se utiliza \texttt{Future.delayed} sin esperar su finalización. El programa imprime ``Inicio'', agenda una tarea para dentro de 2 segundos, e inmediatamente imprime ``Fin inmediato''. La tarea agendada aparece al final, demostrando que el código no se bloqueó.
+    
+    \item En el \textbf{Ejemplo 2}, se utiliza la palabra clave \texttt{await}. Aquí, el flujo de la función \texttt{main} se pausa en la línea del \texttt{delayed}. Se imprime ``Inicio'', el programa espera 2 segundos reales sin ejecutar la siguiente línea, y luego imprime ``Tarea completada'' y finalmente ``Fin''.
+    
+    \item El \textbf{Ejemplo 6} muestra un error común: ejecutar una tarea pesada (un ciclo de 500 millones de iteraciones) directamente en el \texttt{main}. Esto congela la ejecución hasta que el ciclo termina, impidiendo que ocurra cualquier otra cosa entre ``Inicio'' y ``Fin''.
+    
+    \item El \textbf{Ejemplo 4} soluciona lo anterior usando \texttt{Isolate.spawn}. Mueve la función pesada \texttt{sumaGrande} a un hilo separado, el \texttt{main} inicia el hilo y sigue ejecutando inmediatamente (``Mientras tanto, sigo ejecutando...''), demostrando que la interfaz o el hilo principal no se congelan mientras el otro hilo calcula.
+    
+    \item El \textbf{Ejemplo 3} ilustra la comunicación básica unidireccional. Se crea un \texttt{ReceivePort} en el \texttt{main} y se pasa su \texttt{SendPort} al Isolate nuevo. El Isolate envía un mensaje simple (``Hola...'') y el \texttt{main} lo escucha.
+    
+    \item El \textbf{Ejemplo 5} implementa una comunicación bidireccional (ping-pong). El worker crea su propio puerto y se lo envía al \texttt{main}. Así, el \texttt{main} puede enviar mensajes al worker y el worker puede responder. Se destaca el control del ciclo de vida con \texttt{mainReceive.close()} y \texttt{isolate.kill()} para finalizar los procesos limpiamente.
+\end{itemize}
+
+\paragraph{Interpretación}
+Los conceptos que abarcan estos programas son Concurrencia, Paralelismo y Paso de Mensajes.
+
+\begin{description}
+    \item[Event Loop y Asincronía (Futures):] Dart es ``single-threaded'' por defecto. Los Ejemplos 1 y 2 demuestran cómo funciona el Event Loop. Usar \texttt{Future} no crea un nuevo hilo, sino que agenda una tarea para el futuro.
+    \begin{itemize}
+        \item Sin \texttt{await} (Ejemplo 1), el código sigue de largo (no bloqueante).
+        \item Con \texttt{await} (Ejemplo 2), se simula un comportamiento síncrono, pausando la ejecución de esa función específica hasta que la tarea futura se completa, útil para esperar respuestas de servidores o temporizadores.
+    \end{itemize}
+    
+    \item[Paralelismo Real (Isolates):] A diferencia de otros lenguajes que usan ``Threads'' compartiendo memoria, Dart usa Isolates.
+    \begin{itemize}
+        \item En el Ejemplo 6, vemos el concepto de bloqueo del hilo principal (CPU-bound blocking); si calculas algo pesado en el \texttt{main}, la aplicación se congela.
+        \item En el Ejemplo 4, se aplica el paralelismo real. Al usar \texttt{Isolate.spawn}, se crea un nuevo espacio de memoria y un hilo de ejecución independiente. Esto permite que el cálculo pesado y la impresión de mensajes en el \texttt{main} ocurran simultáneamente.
+    \end{itemize}
+    
+    \item[Memoria Aislada y Puertos:] El concepto clave de los Isolates es que no comparten memoria (no hay variables globales compartidas ni riesgo de \textit{race conditions}).
+    \begin{itemize}
+        \item Para comunicarse, deben usar Paso de Mensajes a través de \texttt{SendPort} y \texttt{ReceivePort}, como se ve en los Ejemplos 3 y 5.
+        \item Esto obliga a pensar en la arquitectura como un sistema de cliente-servidor, donde un hilo solicita algo y espera a que el otro le envíe la respuesta a través del puerto, en lugar de acceder a una variable común.
+    \end{itemize}
+\end{description}
+
+\subsubsection{Patrones de Diseño}
+
+Este código implementa un sistema de gestión de impresiones centralizado utilizando el patrón de diseño Singleton para asegurar que solo exista una única instancia de la \texttt{Impresora} en toda la aplicación.
+
+\begin{itemize}
+    \item \textbf{Clase de Datos (Documento):} Define la estructura básica de lo que se va a procesar, es una clase inmutable que contiene el id, usuario, nombre y contenido; sobrescribe el método \texttt{toString} para facilitar la visualización en consola.
+    
+    \item \textbf{Clase Singleton (Impresora):} Esta es la clase central del ejemplo.
+    \begin{itemize}
+        \item \textbf{Instancia Única:} Declara una propiedad estática y final llamada \texttt{\_instancia} que almacena la única referencia de la clase creada a través del constructor privado \texttt{\_interna()}.
+        \item \textbf{Constructor Factory:} Utiliza la palabra clave \texttt{factory}. A diferencia de otros lenguajes donde se llama a un método \texttt{getInstance()}, en Dart el constructor \texttt{factory Impresora()} devuelve la instancia estática \texttt{\_instancia} existente; esto permite usar \texttt{new Impresora()} (o solo \texttt{Impresora()}) pareciendo una instanciación normal, pero devolviendo siempre el mismo objeto.
+        \item \textbf{Gestión de Estado:} Maneja una \texttt{Queue} (Cola) llamada \texttt{\_colaImpresion} para los documentos pendientes y una \texttt{List} para el historial, simulando el buffer de una impresora real.
+    \end{itemize}
+    
+    \item \textbf{Flujo del main:}
+    \begin{itemize}
+        \item Se declaran dos variables, \texttt{impresoraA} e \texttt{impresoraB}, ambas instanciando \texttt{Impresora()}.
+        \item Se demuestra la identidad con \texttt{identical(impresoraA, impresoraB)}, confirmando que ambas variables apuntan al mismo espacio de memoria.
+        \item Se simula concurrencia de usuarios: \texttt{impresoraA} (Alice) e \texttt{impresoraB} (Bob) envían documentos y al imprimir con \texttt{impresoraA}, se procesan también los documentos enviados por \texttt{impresoraB}, demostrando que la cola es compartida.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Interpretación}
+Los conceptos usados en este ejemplo son los siguientes:
+
+\begin{description}
+    \item[Patrón Singleton:] El objetivo es restringir la instanciación de una clase a un solo objeto. Una impresora física es un recurso compartido exclusivo; si cada usuario creara su propia instancia de ``Impresora'' en el software, habría múltiples colas de impresión desincronizadas enviando datos al hardware al mismo tiempo, lo cual causaría errores. El Singleton garantiza un punto de acceso global y una cola unificada.
+    
+    \item[Constructores Factory:] Dart ofrece una forma elegante de implementar Singleton mediante constructores de fábrica. El cliente del código (\texttt{main}) no necesita saber que está usando un Singleton, simplemente llama a \texttt{Impresora()}; el constructor \texttt{factory} se encarga de la lógica de ``si ya existe, devuélvelo; si no, créalo'', aunque en el ejemplo la creación es inmediata al inicio.
+    
+    \item[Estructura de Datos FIFO:] Para la lógica de impresión, se utiliza una Cola (\texttt{Queue}). Esto respeta el principio FIFO (\textit{First In, First Out}): el primer documento que llega (\texttt{addLast}) es el primero en imprimirse (\texttt{removeFirst}); esto es esencial en sistemas de impresión para respetar el orden de llegada de los usuarios.
+    
+    \item[Estado Compartido:] El ejemplo ilustra cómo el estado (\texttt{\_colaImpresion} y \texttt{\_historial}) persiste y es accesible desde diferentes ``referencias''; aunque Alice (\texttt{impresoraA}) y Bob (\texttt{impresoraB}) parezcan tener impresoras distintas, ambos están modificando la misma lista en memoria.
+\end{description}
+
+\subsection{Diagramas UML}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Archivos UML Static - Clases.png}
+    \caption{Archivos, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Archivos UML Dinamic - Secuencia.png}
+    \caption{Archivos, Diagrama de Secuencia - Flujo Principal.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Hilos 1 Clases.png}
+    \caption{Hilos, Ejemplo 1, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 1 Secuencia.png}
+    \caption{Hilos, Ejemplo 1, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Hilos 2 Clases.png}
+    \caption{Hilos, Ejemplo 2, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 2 Secuencia.png}
+    \caption{Hilos, Ejemplo 2, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 3 Clases.png}
+    \caption{Hilos, Ejemplo 3, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 3 Secuencia.png}
+    \caption{Hilos, Ejemplo 3, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 4 Clases.png}
+    \caption{Hilos, Ejemplo 4, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Hilos 4 Secuencia.png}
+    \caption{Hilos, Ejemplo 4, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 5 Clases.png}
+    \caption{Hilos, Ejemplo 5, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Hilos 5 Secuencia.png}
+    \caption{Hilos, Ejemplo 5, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth, height=0.5\textheight, keepaspectratio]{UML/Hilos 6 Clases.png}
+    \caption{Hilos, Ejemplo 6, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Hilos 6 Secuencia.png}
+    \caption{Hilos, Ejemplo 6, Diagrama de Secuencia.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth, height=0.7\textheight, keepaspectratio]{UML/Singleton Clases.png}
+    \caption{Patrón Singleton, Diagrama de Clases.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{UML/Singleton Secuencia Detalle.png}
+    \caption{Patrón Singleton, Diagrama de Secuencia - Detalle de Singleton.}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Archivos}
+
+\subsubsection{Ejemplo 1: Crear archivo .txt y escribir texto}
+\textbf{Operación:} Creación de archivo con múltiples líneas
+\textbf{Archivo:} notas.txt
+\textbf{Contenido:}
+\begin{verbatim}
+
+    Tareas pendientes:
+    Estudiar para el examen
+    Hacer la tarea de matemáticas
+    Leer el capítulo 4
+    
+\end{verbatim}
+\begin{itemize}
+\item Se crea correctamente el archivo \texttt{notas.txt} en el directorio actual
+\item El contenido se guarda con saltos de línea entre cada línea ingresada
+\item El sistema confirma con mensaje: 'Archivo creado y guardado correctamente'
+\item Al leer el archivo, se muestra exactamente el texto ingresado
+\end{itemize}
+
+\subsubsection{Ejemplo 2: Leer archivo existente}
+\textbf{Operación:} Lectura de archivo creado previamente
+\textbf{Archivo:} notas.txt
+\begin{itemize}
+\item El sistema busca el archivo en la ruta especificada
+\item Si existe, muestra el contenido completo con formato
+\item Se muestra el encabezado 'CONTENIDO DEL ARCHIVO' antes del contenido
+\item Si el archivo no existe, muestra mensaje: 'El archivo no existe'
+\end{itemize}
+
+\subsubsection{Ejemplo 3: Sobrescribir archivo existente}
+\textbf{Operación:} Reemplazo completo de contenido
+\textbf{Archivo:} notas.txt
+\textbf{Nuevo contenido:}
+\begin{verbatim}
+
+    Tareas actualizadas:
+    Reunión con el equipo
+    Presentación del proyecto
+    
+\end{verbatim}
+\begin{itemize}
+\item El sistema verifica que el archivo existe antes de sobrescribir
+\item Solicita confirmación con 'SI' para proceder
+\item Elimina todo el contenido anterior y guarda el nuevo
+\item Confirma con mensaje: 'Archivo sobrescrito correctamente'
+\end{itemize}
+
+\subsection{Hilos}
+
+\subsubsection{Ejemplo 1: Future.delayed sin await}
+\textbf{Comportamiento:} Ejecución asíncrona no bloqueante
+\begin{itemize}
+\item Se imprime 'Inicio' inmediatamente
+\item Se programa tarea para 2 segundos después
+\item Se imprime 'Fin inmediato (sin esperar)' sin esperar
+\item Después de 2 segundos se ejecuta: 'Tarea asíncrona completada'
+\item El hilo principal no se bloquea durante la espera
+\end{itemize}
+
+\subsubsection{Ejemplo 2: Future.delayed con await}
+\textbf{Comportamiento:} Ejecución secuencial con espera
+\begin{itemize}
+\item Se imprime 'Inicio' inmediatamente
+\item El programa espera 2 segundos completos
+\item Se imprime 'Tarea completada con await' después de la espera
+\item Finalmente se imprime 'Fin'
+\item El hilo principal se bloquea durante los 2 segundos
+\end{itemize}
+
+\subsubsection{Ejemplo 3: Isolate básico}
+\textbf{Comportamiento:} Comunicación unidireccional entre isolates
+\begin{itemize}
+\item Se crea un ReceivePort en el isolate principal
+\item Se genera un nuevo isolate con la función \texttt{tarea}
+\item El isolate secundario envía mensaje: 'Hola desde otro isolate'
+\item El isolate principal recibe y muestra el mensaje
+\item Se cierra el puerto después de recibir el mensaje
+\end{itemize}
+
+\subsubsection{Ejemplo 4: Isolate con cálculo pesado}
+\textbf{Comportamiento:} Procesamiento paralelo intensivo
+\begin{itemize}
+\item Se inicia cálculo pesado (suma de 500 millones) en isolate separado
+\item El hilo principal continúa ejecutándose inmediatamente
+\item Se imprime 'Mientras tanto, sigo ejecutando en el hilo principal...'
+\item El cálculo se ejecuta en paralelo sin bloquear la interfaz
+\item Cuando termina, se recibe el resultado: 'Resultado: 124999999750000000'
+\end{itemize}
+
+\subsubsection{Ejemplo 5: Comunicación bidireccional entre isolates}
+\textbf{Comportamiento:} Diálogo completo entre isolates
+\begin{itemize}
+\item Isolate worker envía su SendPort al main
+\item Main recibe confirmación: 'Main: recibí el SendPort del worker'
+\item Main envía mensaje: "Mensaje desde main"
+\item Worker responde: 'Recibido en worker: Mensaje desde main'
+\item Main recibe respuesta y cierra la comunicación
+\item Se mata el isolate worker para liberar recursos
+\end{itemize}
+
+\subsubsection{Ejemplo 6: Cálculo sincrónico (Sin hilos)}
+\textbf{Comportamiento:} Procesamiento bloqueante
+\begin{itemize}
+\item Se imprime 'Inicio'
+\item El programa se bloquea completamente durante el cálculo
+\item No responde a entradas del usuario durante ~5-10 segundos
+\item Al terminar, muestra: 'Resultado: 124999999750000000'
+\item Finalmente imprime 'Fin'
+\item Demuestra la necesidad de hilos para operaciones intensivas
+\end{itemize}
+
+\subsection{Patrón Singleton}
+
+\subsubsection{Ejemplo: Sistema de Impresión con Singleton}
+\textbf{Patrón:} Singleton
+\textbf{Documentos enviados:}
+\begin{itemize}
+\item Documento 1: 'Reporte mensual' (Usuario: Alice)
+\item Documento 2: 'Contrato de servicio' (Usuario: Bob)
+\item Documento 3: 'Presentación proyecto X' (Usuario: Carlos)
+\end{itemize}
+\begin{itemize}
+\item Verificación Singleton: \texttt{identical(impresoraA, impresoraB)} retorna \texttt{true}
+\item Todos los documentos se agregan a la misma cola compartida
+\item La cola muestra 3 documentos en orden FIFO
+\item Al imprimir, se procesan en el orden de llegada
+\item El historial acumula todos los documentos impresos
+\item La cola se vacía después de procesar todos los documentos
+\item El estado se mantiene consistente entre todas las referencias
+\end{itemize}
+
+\textbf{Resultados esperados:}
+\begin{itemize}
+\item Cola inicial: 3 documentos pendientes
+\item Después de 2 impresiones: 1 documento pendiente
+\item Historial final: 3 documentos impresos
+\item Estado consistente en todas las referencias a la impresora
+\end{itemize}
+
+
+\section{Conclusiones}
+El estudio de Archivos, Hilos de Ejecución y Patrones ha culminado en la adquisición exitosa de las competencias teóricas y prácticas necesarias para el desarrollo de software profesional. Se logró un entendimiento profundo del manejo del flujo de datos y la persistencia; la gestión eficiente de tareas concurrentes; y la aplicación de soluciones estructurales como el patrón Singleton. Este conocimiento se consolidó eficazmente gracias a la ejecución y análisis detallado de los códigos y ejemplos proporcionados por el profesor, lo cual permitió visualizar la aplicación de cada concepto en un entorno práctico real.
+
+
+
+\clearpage
+
+\printbibliography
+
+\end{document}
